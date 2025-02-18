@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -13,5 +14,6 @@ func main() {
 	if err != nil {
 		fmt.Printf("Error reading input: %v", err)
 	}
-	fmt.Printf("invalid command: %s", input)
+	input = strings.TrimSuffix(input, "\n")
+	fmt.Printf("%s: invalid command", input)
 }
