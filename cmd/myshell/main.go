@@ -15,5 +15,5 @@ func main() {
 		fmt.Printf("Error reading input: %v", err)
 	}
 	input = strings.TrimSuffix(input, "\n")
-	fmt.Printf("%s: invalid command", input)
+	fmt.Printf("%s: command not found", input)
 }
