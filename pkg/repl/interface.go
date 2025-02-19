@@ -7,6 +7,4 @@ type Repl interface {
 
 type Program interface {
 	Run()
-	exit()
-	echo()
 }
