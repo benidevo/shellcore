@@ -1,19 +1,18 @@
 package main
 
 import (
-	"bufio"
-	"fmt"
-	"os"
-	"strings"
+	"github.com/codecrafters-io/shell-starter-go/pkg/repl"
 )
 
-func main() {
-	fmt.Fprint(os.Stdout, "$ ")
+func runProgram() {
+	repl := repl.NewShellRepl()
+	for {
+		input, _ := repl.Read()
 
-	input, err := bufio.NewReader(os.Stdin).ReadString('\n')
-	if err != nil {
-		fmt.Printf("Error reading input: %v", err)
+		repl.Print(input)
 	}
-	input = strings.TrimSuffix(input, "\n")
-	fmt.Printf("%s: command not found", input)
+}
+
+func main() {
+	runProgram()
 }
