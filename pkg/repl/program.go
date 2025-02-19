@@ -1,6 +1,7 @@
 package repl
 
 import (
+	"os"
 	"os/exec"
 	"strings"
 
@@ -18,23 +19,35 @@ func NewShellProgram(r Repl) *shellProgram {
 	return &shellProgram{repl: r}
 }
 
+
+// Run starts the shell program.
+//
+// It reads commands from the REPL and executes them until the user enters
+// "exit 0". It handles shell builtins and external commands differently.
 func (p *shellProgram) Run() {
 	for {
 		input, _ := p.repl.Read()
 		if input == "exit 0" {
 			break
 		}
-		args := strings.Split(input, " ")
-		if len(args) == 2 && args[0] == "type" {
-			p.executeTypeCommand(args[1])
-			continue
-		}
-		if args[0] == "echo" {
-			p.echo(args[1:])
 
-		} else {
-			p.repl.Print(input, false)
+		args := strings.Split(input, " ")
+		executable, err := findFile(args[0])
+		if err != nil {
+			if len(args) == 2 && args[0] == "type" {
+				p.executeTypeCommand(args[1])
+				continue
+			}
+			if args[0] == "echo" {
+				p.echo(args[1:])
+
+			} else {
+				p.repl.Print(input, false)
+			}
 		}
+
+		executeScript(executable, args[1:]...)
+
 	}
 }
 
@@ -79,4 +92,11 @@ func buildStrings(args []string) string {
 		response.WriteString(" ")
 	}
 	return response.String()
+}
+
+func executeScript(script string, args ...string) error {
+	cmd := exec.Command(script, args...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
 }
