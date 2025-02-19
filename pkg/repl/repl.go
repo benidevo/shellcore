@@ -40,13 +40,15 @@ func (s *ShellRepl) Read() (string, error) {
 	return strings.TrimSuffix(input, "\n"), nil
 }
 
+
 // Print writes the given output string to the shell's writer.
 //
-// If the output command is invalid, it prefixes the output string with
-// "command not found" and appends a newline character.
+// If the output is not valid (i.e. the command is not recognized), it writes
+// "<command>: not found" followed by a newline. Otherwise, it writes just the
+// output string followed by a newline.
 func (s *ShellRepl) Print(output string, valid bool) {
 	if !valid {
-		fmt.Fprintf(s.writer, "%s: command not found\n", output)
+		fmt.Fprintf(s.writer, "%s: not found\n", output)
 	} else {
 		fmt.Fprintf(s.writer, "%s\n", output)
 	}
