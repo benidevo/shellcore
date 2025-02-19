@@ -32,7 +32,7 @@ func (s *ShellRepl) Read() (string, error) {
 }
 
 func (s *ShellRepl) Print(output string) {
-	fmt.Fprintf(s.writer, "%s: command not found\n", output)
+	fmt.Fprintf(s.writer, "%s\n", output)
 	s.writer.Flush()
 }
 
