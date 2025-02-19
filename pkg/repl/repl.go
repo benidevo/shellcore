@@ -40,7 +40,6 @@ func (s *ShellRepl) Read() (string, error) {
 	return strings.TrimSuffix(input, "\n"), nil
 }
 
-
 // Print writes the given output string to the shell's writer.
 //
 // If the output is not valid (i.e. the command is not recognized), it writes

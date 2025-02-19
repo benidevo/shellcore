@@ -1,4 +1,4 @@
-format:
+fmt:
 	go fmt ./...
 
 run-shell:
