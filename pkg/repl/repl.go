@@ -12,6 +12,10 @@ type ShellRepl struct {
 	writer *bufio.Writer
 }
 
+// NewShellRepl creates a new REPL for the shell.
+//
+// It creates a *bufio.Reader for reading from os.Stdin and a *bufio.Writer for
+// writing to os.Stdout.
 func NewShellRepl() *ShellRepl {
 	return &ShellRepl{
 		reader: bufio.NewReader(os.Stdin),
@@ -19,6 +23,11 @@ func NewShellRepl() *ShellRepl {
 	}
 }
 
+// Read displays the shell prompt and waits for user input.
+//
+// It reads a line from the standard input and returns the input string
+// without the trailing newline character. If an error occurs during
+// reading, it returns an empty string and the encountered error.
 func (s *ShellRepl) Read() (string, error) {
 	s.writeShellPrompt()
 
@@ -31,6 +40,10 @@ func (s *ShellRepl) Read() (string, error) {
 	return strings.TrimSuffix(input, "\n"), nil
 }
 
+// Print writes the given output string to the shell's writer.
+//
+// If the output command is invalid, it prefixes the output string with
+// "command not found" and appends a newline character.
 func (s *ShellRepl) Print(output string, valid bool) {
 	if !valid {
 		fmt.Fprintf(s.writer, "%s: command not found\n", output)
