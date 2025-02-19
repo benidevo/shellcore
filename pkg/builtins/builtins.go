@@ -2,6 +2,7 @@ package builtins
 
 var builtinsMap = map[string]struct{}{
 	"echo": {},
+	"exit": {},
 }
 
 // IsBuiltin checks if the given command is a shell builtin.
