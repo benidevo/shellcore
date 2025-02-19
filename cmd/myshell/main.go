@@ -1,18 +1,10 @@
 package main
 
-import (
-	"github.com/codecrafters-io/shell-starter-go/pkg/repl"
-)
-
-func runProgram() {
-	repl := repl.NewShellRepl()
-	for {
-		input, _ := repl.Read()
-
-		repl.Print(input)
-	}
-}
+import "github.com/codecrafters-io/shell-starter-go/pkg/repl"
 
 func main() {
-	runProgram()
+	shellRepl := repl.NewShellRepl()
+	program := repl.NewShellProgram(shellRepl)
+
+	program.Run()
 }
