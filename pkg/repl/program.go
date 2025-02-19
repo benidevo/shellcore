@@ -32,7 +32,7 @@ func (p *shellProgram) Run() {
 		}
 
 		args := strings.Split(input, " ")
-		executable, err := findFile(args[0])
+		_, err := findFile(args[0])
 		if err != nil {
 			if len(args) == 2 && args[0] == "type" {
 				p.executeTypeCommand(args[1])
@@ -46,7 +46,7 @@ func (p *shellProgram) Run() {
 			}
 		}
 
-		executeScript(executable, args[1:]...)
+		executeScript(args[0], args[1:]...)
 
 	}
 }
