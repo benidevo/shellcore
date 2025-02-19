@@ -3,6 +3,8 @@ package repl
 import (
 	"os/exec"
 	"strings"
+
+	"github.com/codecrafters-io/shell-starter-go/pkg/builtins"
 )
 
 type shellProgram struct {
@@ -41,16 +43,25 @@ func (s *shellProgram) echo(value []string) {
 }
 
 func (s *shellProgram) executeTypeCommand(arg string) {
-	path, err := findFile(arg)
-	if err != nil {
-		s.repl.Print(arg, false)
+	var output []string
+	var outputString string
+
+	exists := builtins.IsBuiltin(arg)
+	if !exists {
+		path, err := findFile(arg)
+		if err != nil {
+			s.repl.Print(arg, false)
+			return
+		}
+		output = []string{arg, "is", path}
+		outputString = buildStrings(output)
+		s.repl.Print(outputString, true)
 		return
 	}
-	response := strings.Builder{}
-	response.WriteString(arg)
-	response.WriteString(" is ")
-	response.WriteString(path)
-	s.repl.Print(response.String(), true)
+
+	output = []string{arg, "is a shell builtin"}
+	outputString = buildStrings(output)
+	s.repl.Print(outputString, true)
 }
 
 func findFile(filename string) (string, error) {
@@ -59,4 +70,13 @@ func findFile(filename string) (string, error) {
 		return "", err
 	}
 	return path, nil
+}
+
+func buildStrings(args []string) string {
+	var response strings.Builder
+	for _, arg := range args {
+		response.WriteString(arg)
+		response.WriteString(" ")
+	}
+	return response.String()
 }
