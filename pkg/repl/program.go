@@ -11,10 +11,12 @@ type shellProgram struct {
 	repl Repl
 }
 
-// NewShellProgram creates a new shell program for the given REPL.
+// NewShellProgram creates a new shell program.
 //
-// It returns a *shellProgram which implements the Program interface.
-func NewShellProgram(r Repl) *shellProgram {
+// It takes a REPL as a parameter and returns a Program that reads commands
+// from the REPL and executes them until the user enters "exit 0". It
+// handles shell builtins and external commands differently.
+func NewShellProgram(r Repl) Program {
 	return &shellProgram{repl: r}
 }
 
@@ -28,12 +30,15 @@ func (p *shellProgram) Run() {
 		if input == "exit 0" {
 			break
 		}
-
+		if input == "pwd" {
+			p.execPwdCommand()
+			continue
+		}
 		args := strings.Split(input, " ")
 		_, err := utils.FindFile(args[0])
 		if err != nil {
 			if len(args) == 2 && args[0] == "type" {
-				p.executeTypeCommand(args[1])
+				p.execTypeCommand(args[1])
 				continue
 			}
 			if args[0] == "echo" {
@@ -53,7 +58,7 @@ func (s *shellProgram) echo(value []string) {
 	s.repl.Print(strings.Join(value, " "), true)
 }
 
-func (s *shellProgram) executeTypeCommand(arg string) {
+func (s *shellProgram) execTypeCommand(arg string) {
 	var output []string
 	var outputString string
 
@@ -73,4 +78,9 @@ func (s *shellProgram) executeTypeCommand(arg string) {
 	output = []string{arg, "is a shell builtin"}
 	outputString = utils.BuildStrings(output)
 	s.repl.Print(outputString, true)
+}
+
+func (s *shellProgram) execPwdCommand() {
+	output := utils.GetWorkingDirectory()
+	s.repl.Print(output, true)
 }

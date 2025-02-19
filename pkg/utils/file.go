@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -29,4 +30,13 @@ func BuildStrings(args []string) string {
 		response.WriteString(" ")
 	}
 	return response.String()
+}
+
+// GetWorkingDirectory returns the current working directory as a string.
+//
+// It retrieves the directory using os.Getwd and removes any trailing newline
+// character before returning the result.
+func GetWorkingDirectory() string {
+	dir, _ := os.Getwd()
+	return strings.TrimSuffix(string(dir), "\n")
 }

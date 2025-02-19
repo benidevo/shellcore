@@ -4,6 +4,7 @@ var builtinsMap = map[string]struct{}{
 	"echo": {},
 	"exit": {},
 	"type": {},
+	"pwd":  {},
 }
 
 // IsBuiltin checks if the given command is a shell builtin.

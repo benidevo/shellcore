@@ -14,9 +14,8 @@ type ShellRepl struct {
 
 // NewShellRepl creates a new REPL for the shell.
 //
-// It creates a *bufio.Reader for reading from os.Stdin and a *bufio.Writer for
-// writing to os.Stdout.
-func NewShellRepl() *ShellRepl {
+// It returns a *ShellRepl which implements the Repl interface.
+func NewShellRepl() Repl {
 	return &ShellRepl{
 		reader: bufio.NewReader(os.Stdin),
 		writer: bufio.NewWriter(os.Stdout),
