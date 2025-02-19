@@ -21,11 +21,11 @@ func (p *ShellProgram) Run() {
 			p.echo(args[1:])
 
 		} else {
-			p.repl.Print(input)
+			p.repl.Print(input, false)
 		}
 	}
 }
 
 func (s *ShellProgram) echo(value []string) {
-	s.repl.Print(strings.Join(value, " "))
+	s.repl.Print(strings.Join(value, " "), true)
 }

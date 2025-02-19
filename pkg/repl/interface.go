@@ -2,7 +2,7 @@ package repl
 
 type Repl interface {
 	Read() (string, error)
-	Print(string)
+	Print(string, bool)
 }
 
 type Program interface {

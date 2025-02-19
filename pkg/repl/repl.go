@@ -31,8 +31,12 @@ func (s *ShellRepl) Read() (string, error) {
 	return strings.TrimSuffix(input, "\n"), nil
 }
 
-func (s *ShellRepl) Print(output string) {
-	fmt.Fprintf(s.writer, "%s\n", output)
+func (s *ShellRepl) Print(output string, valid bool) {
+	if !valid {
+		fmt.Fprintf(s.writer, "%s: command not found\n", output)
+	} else {
+		fmt.Fprintf(s.writer, "%s\n", output)
+	}
 	s.writer.Flush()
 }
 
