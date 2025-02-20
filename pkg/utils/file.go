@@ -40,3 +40,11 @@ func GetWorkingDirectory() string {
 	dir, _ := os.Getwd()
 	return strings.TrimSuffix(string(dir), "\n")
 }
+
+// ChangeDirectory changes the current working directory to the given path.
+//
+// It uses os.Chdir to change the directory. If the change is successful, it
+// returns nil. If an error occurs during the change, it returns the error.
+func ChangeDirectory(path string) error {
+	return os.Chdir(path)
+}

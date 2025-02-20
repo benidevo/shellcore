@@ -35,6 +35,10 @@ func (p *shellProgram) Run() {
 			continue
 		}
 		args := strings.Split(input, " ")
+		if args[0] == "cd" {
+			p.execCDCommand(args[1])
+			continue
+		}
 		_, err := utils.FindFile(args[0])
 		if err != nil {
 			if len(args) == 2 && args[0] == "type" {
@@ -83,4 +87,11 @@ func (s *shellProgram) execTypeCommand(arg string) {
 func (s *shellProgram) execPwdCommand() {
 	output := utils.GetWorkingDirectory()
 	s.repl.Print(output, true)
+}
+
+func (s *shellProgram) execCDCommand(path string) {
+	err := utils.ChangeDirectory(path)
+	if err != nil {
+		s.repl.Print("cd: "+path+": No such file or directory", true)
+	}
 }
