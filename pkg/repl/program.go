@@ -7,6 +7,14 @@ import (
 	"github.com/codecrafters-io/shell-starter-go/pkg/utils"
 )
 
+const (
+	CD   = "cd"
+	PWD  = "pwd"
+	ECHO = "echo"
+	TYPE = "type"
+	EXIT = "exit 0"
+)
+
 type shellProgram struct {
 	repl Repl
 }
@@ -20,32 +28,37 @@ func NewShellProgram(r Repl) Program {
 	return &shellProgram{repl: r}
 }
 
-// Run starts the shell program.
+// Run starts the shell program's read-eval-print loop.
 //
-// It reads commands from the REPL and executes them until the user enters
-// "exit 0". It handles shell builtins and external commands differently.
+// It reads commands from the REPL, parses them, and executes them. If the
+// command is a shell builtin, it is handled internally. Otherwise, it is run as
+// an external command. The loop exits when the user enters "exit 0".
 func (p *shellProgram) Run() {
+outerLoop:
 	for {
 		input, _ := p.repl.Read()
-		if input == "exit 0" {
-			break
-		}
-		if input == "pwd" {
+
+		switch input {
+		case PWD:
 			p.execPwdCommand()
 			continue
+		case EXIT:
+			break outerLoop
 		}
+
 		args := strings.Split(input, " ")
-		if args[0] == "cd" {
+		if args[0] == CD {
 			p.execCDCommand(args[1])
 			continue
 		}
+
 		_, err := utils.FindFile(args[0])
 		if err != nil {
-			if len(args) == 2 && args[0] == "type" {
+			if len(args) == 2 && args[0] == TYPE {
 				p.execTypeCommand(args[1])
 				continue
 			}
-			if args[0] == "echo" {
+			if args[0] == ECHO {
 				p.echo(args[1:])
 
 			} else {
