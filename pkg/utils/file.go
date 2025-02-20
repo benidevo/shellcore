@@ -43,8 +43,11 @@ func GetWorkingDirectory() string {
 
 // ChangeDirectory changes the current working directory to the given path.
 //
-// It uses os.Chdir to change the directory. If the change is successful, it
-// returns nil. If an error occurs during the change, it returns the error.
+// If the given path is "~", it changes the directory to the user's home directory.
+// It returns an error if the directory change was unsuccessful.
 func ChangeDirectory(path string) error {
+	if path == "~" {
+		path, _ = os.UserHomeDir()
+	}
 	return os.Chdir(path)
 }
