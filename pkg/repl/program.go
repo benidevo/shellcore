@@ -13,6 +13,7 @@ const (
 	ECHO = "echo"
 	TYPE = "type"
 	EXIT = "exit 0"
+	CAT  = "cat"
 )
 
 type shellProgram struct {
@@ -37,42 +38,50 @@ func (p *shellProgram) Run() {
 outerLoop:
 	for {
 		input, _ := p.repl.Read()
+		if input == EXIT {
+			break outerLoop
+		}
+		parsedInput := utils.ParseCommand(input)
+		if len(parsedInput) == 0 {
+			continue
+		}
 
-		switch input {
+		command := parsedInput[0]
+		switch command {
 		case PWD:
 			p.execPwdCommand()
 			continue
-		case EXIT:
-			break outerLoop
-		}
-
-		args := strings.Split(input, " ")
-		if args[0] == CD {
-			p.execCDCommand(args[1])
+		case CD:
+			p.execCdCommand(parsedInput[1])
+			continue
+		case ECHO:
+			p.echo(parsedInput[1:])
+			continue
+		case CAT:
+			parsedInput := utils.ParseCommand(input)
+			utils.ExecuteScript(parsedInput[0], parsedInput[1:]...)
 			continue
 		}
 
-		_, err := utils.FindFile(args[0])
+		_, err := utils.FindFile(command)
 		if err != nil {
-			if len(args) == 2 && args[0] == TYPE {
-				p.execTypeCommand(args[1])
+			if len(parsedInput) == 2 && command == TYPE {
+				p.execTypeCommand(parsedInput[1])
 				continue
 			}
-			if args[0] == ECHO {
-				p.echo(args[1:])
 
-			} else {
-				p.repl.Print(input, false)
-			}
+			p.repl.Print(input, false)
+			continue
 		}
 
-		utils.ExecuteScript(args[0], args[1:]...)
-
+		utils.ExecuteScript(command, parsedInput[1:]...)
+		continue
 	}
 }
 
 func (s *shellProgram) echo(value []string) {
-	s.repl.Print(strings.Join(value, " "), true)
+	output := strings.Join(value, " ")
+	s.repl.Print(output, true)
 }
 
 func (s *shellProgram) execTypeCommand(arg string) {
@@ -102,7 +111,7 @@ func (s *shellProgram) execPwdCommand() {
 	s.repl.Print(output, true)
 }
 
-func (s *shellProgram) execCDCommand(path string) {
+func (s *shellProgram) execCdCommand(path string) {
 	err := utils.ChangeDirectory(path)
 	if err != nil {
 		s.repl.Print("cd: "+path+": No such file or directory", true)
