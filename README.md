@@ -1,35 +1,50 @@
-[![progress-banner](https://backend.codecrafters.io/progress/shell/34c5d75c-87bc-4c61-9b42-c798b66b0a01)](https://app.codecrafters.io/users/codecrafters-bot?r=2qF)
+# ShellCore
 
-This is a starting point for Go solutions to the
-["Build Your Own Shell" Challenge](https://app.codecrafters.io/courses/shell/overview).
+A Unix shell implementation in Go featuring command execution, built-in commands, and path resolution. The shell supports basic operations with robust error handling and command parsing.
 
-In this challenge, you'll build your own POSIX compliant shell that's capable of
-interpreting shell commands, running external programs and builtin commands like
-cd, pwd, echo and more. Along the way, you'll learn about shell command parsing,
-REPLs, builtin commands, and more.
+## Core Features
 
-**Note**: If you're viewing this repo on GitHub, head over to
-[codecrafters.io](https://codecrafters.io) to try the challenge.
+- Command Execution:
+  - System command execution with argument parsing
+  - Single quote handling for preserving whitespaces
+  - PATH resolution for finding executables
 
-# Passing the first stage
+- Built-in Commands:
+  - `cd <path>` - Navigate directories
+  - `pwd` - Show current directory
+  - `echo <text>` - Display text
+  - `type <command>` - Show command type
+  - `cat <file>` - Display file contents
+  - `exit 0` - Exit shell
 
-The entry point for your `shell` implementation is in `cmd/myshell/main.go`.
-Study and uncomment the relevant code, and push your changes to pass the first
-stage:
+## Quick Start
 
-```sh
-git commit -am "pass 1st stage" # any msg
-git push origin master
+Prerequisites: Go 1.20+
+
+Run the shell:
+
+```bash
+./run.sh
+# OR
+make run-shell
 ```
 
-Time to move on to the next stage!
+## Examples
 
-# Stage 2 & beyond
+Interactive shell usage:
 
-Note: This section is for stages 2 and beyond.
+```bash
+$ echo 'Hello World with spaces'
+Hello World with spaces
 
-1. Ensure you have `go (1.19)` installed locally
-1. Run `./your_program.sh` to run your program, which is implemented in
-   `cmd/myshell/main.go`.
-1. Commit your changes and run `git push origin master` to submit your solution
-   to CodeCrafters. Test output will be streamed to your terminal.
+$ type ls
+ls is /bin/ls
+
+$ type echo
+echo is a shell builtin
+
+$ pwd
+/home/user
+
+$ cd /tmp
+```

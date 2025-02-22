@@ -1,6 +1,6 @@
 package main
 
-import "github.com/codecrafters-io/shell-starter-go/pkg/repl"
+import "github.com/benidevo/shellcore/pkg/repl"
 
 func main() {
 	shellRepl := repl.NewShellRepl()

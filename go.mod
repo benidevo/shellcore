@@ -6,6 +6,6 @@
 //
 // DON'T EDIT THIS!
 
-module github.com/codecrafters-io/shell-starter-go
+module github.com/benidevo/shellcore
 
 go 1.22

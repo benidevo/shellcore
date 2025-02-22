@@ -3,8 +3,9 @@ package repl
 import (
 	"strings"
 
-	"github.com/codecrafters-io/shell-starter-go/pkg/builtins"
-	"github.com/codecrafters-io/shell-starter-go/pkg/utils"
+	"github.com/benidevo/shellcore/internal/builtins"
+	"github.com/benidevo/shellcore/internal/parser"
+	"github.com/benidevo/shellcore/pkg/utils"
 )
 
 const (
@@ -41,7 +42,7 @@ outerLoop:
 		if input == EXIT {
 			break outerLoop
 		}
-		parsedInput := utils.ParseCommand(input)
+		parsedInput := parser.ParseCommand(input)
 		if len(parsedInput) == 0 {
 			continue
 		}
@@ -58,7 +59,7 @@ outerLoop:
 			p.echo(parsedInput[1:])
 			continue
 		case CAT:
-			parsedInput := utils.ParseCommand(input)
+			parsedInput := parser.ParseCommand(input)
 			utils.ExecuteScript(parsedInput[0], parsedInput[1:]...)
 			continue
 		}
