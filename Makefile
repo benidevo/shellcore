@@ -1,5 +1,5 @@
 fmt:
 	go fmt ./...
 
-run-shell:
+run:
 	./run.sh

@@ -39,7 +39,7 @@ func (p *shellProgram) Run() {
 outerLoop:
 	for {
 		input, _ := p.repl.Read()
-		if input == EXIT {
+		if strings.TrimSpace(input) == EXIT {
 			break outerLoop
 		}
 		parsedInput := parser.ParseCommand(input)
@@ -48,29 +48,38 @@ outerLoop:
 		}
 
 		command := parsedInput[0]
-		switch command {
+		switch strings.TrimSpace(command) {
 		case PWD:
 			p.execPwdCommand()
 			continue
 		case CD:
+			if len(parsedInput) < 2 {
+				continue
+			}
 			p.execCdCommand(parsedInput[1])
 			continue
 		case ECHO:
+			if len(parsedInput) < 2 {
+				continue
+			}
 			p.echo(parsedInput[1:])
 			continue
 		case CAT:
-			parsedInput := parser.ParseCommand(input)
+			if len(parsedInput) < 2 {
+				continue
+			}
 			utils.ExecuteScript(parsedInput[0], parsedInput[1:]...)
+			continue
+		case TYPE:
+			if len(parsedInput) < 2 {
+				continue
+			}
+			p.execTypeCommand(parsedInput[1])
 			continue
 		}
 
 		_, err := utils.FindFile(command)
 		if err != nil {
-			if len(parsedInput) == 2 && command == TYPE {
-				p.execTypeCommand(parsedInput[1])
-				continue
-			}
-
 			p.repl.Print(input, false)
 			continue
 		}
@@ -80,12 +89,12 @@ outerLoop:
 	}
 }
 
-func (s *shellProgram) echo(value []string) {
+func (p *shellProgram) echo(value []string) {
 	output := strings.Join(value, " ")
-	s.repl.Print(output, true)
+	p.repl.Print(output, true)
 }
 
-func (s *shellProgram) execTypeCommand(arg string) {
+func (p *shellProgram) execTypeCommand(arg string) {
 	var output []string
 	var outputString string
 
@@ -93,28 +102,28 @@ func (s *shellProgram) execTypeCommand(arg string) {
 	if !exists {
 		path, err := utils.FindFile(arg)
 		if err != nil {
-			s.repl.Print(arg, false)
+			p.repl.Print(arg, false)
 			return
 		}
 		output = []string{arg, "is", path}
 		outputString = utils.BuildStrings(output)
-		s.repl.Print(outputString, true)
+		p.repl.Print(outputString, true)
 		return
 	}
 
 	output = []string{arg, "is a shell builtin"}
 	outputString = utils.BuildStrings(output)
-	s.repl.Print(outputString, true)
+	p.repl.Print(outputString, true)
 }
 
-func (s *shellProgram) execPwdCommand() {
+func (p *shellProgram) execPwdCommand() {
 	output := utils.GetWorkingDirectory()
-	s.repl.Print(output, true)
+	p.repl.Print(output, true)
 }
 
-func (s *shellProgram) execCdCommand(path string) {
+func (p *shellProgram) execCdCommand(path string) {
 	err := utils.ChangeDirectory(path)
 	if err != nil {
-		s.repl.Print("cd: "+path+": No such file or directory", true)
+		p.repl.Print("cd: no such file or directory: "+path, true)
 	}
 }

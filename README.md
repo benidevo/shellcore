@@ -26,7 +26,7 @@ Run the shell:
 ```bash
 ./run.sh
 # OR
-make run-shell
+make run
 ```
 
 ## Examples

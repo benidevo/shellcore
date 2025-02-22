@@ -32,7 +32,7 @@ func (s *ShellRepl) Read() (string, error) {
 
 	input, err := s.reader.ReadString('\n')
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "error reading input: %v\n", err)
+		fmt.Fprintf(s.writer, "error reading input: %v\n", err)
 		return "", err
 	}
 
